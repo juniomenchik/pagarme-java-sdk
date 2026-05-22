@@ -1,0 +1,10 @@
+me.pagar.api
+me.pagar.api.authentication
+me.pagar.api.controllers
+me.pagar.api.exceptions
+me.pagar.api.http
+me.pagar.api.http.client
+me.pagar.api.http.request
+me.pagar.api.http.response
+me.pagar.api.models
+me.pagar.api.utilities

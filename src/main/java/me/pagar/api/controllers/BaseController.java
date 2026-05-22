@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import me.pagar.api.exceptions.ApiException;
 import me.pagar.api.exceptions.ErrorException;
+import me.pagar.api.exceptions.NotImplementedException;
 import me.pagar.api.http.client.HttpCallback;
 
 /**
@@ -35,6 +36,8 @@ public abstract class BaseController {
                 (reason, context) -> new ErrorException(reason, context)));
         GLOBAL_ERROR_CASES.put("500", ErrorCase.setReason("Internal server error",
                 (reason, context) -> new ErrorException(reason, context)));
+        GLOBAL_ERROR_CASES.put("501", ErrorCase.setReason("Endpoint not implemented",
+                (reason, context) -> new NotImplementedException(reason, context)));
         GLOBAL_ERROR_CASES.put(ErrorCase.DEFAULT, ErrorCase.setReason("HTTP Response Not OK",
                 (reason, context) -> new ApiException(reason, context)));
     }

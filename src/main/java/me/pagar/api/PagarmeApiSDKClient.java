@@ -19,6 +19,7 @@ import me.pagar.api.authentication.BasicAuthManager;
 import me.pagar.api.authentication.BasicAuthModel;
 import me.pagar.api.controllers.BalanceOperationsController;
 import me.pagar.api.controllers.ChargesController;
+import me.pagar.api.controllers.HealthCheckController;
 import me.pagar.api.controllers.CustomersController;
 import me.pagar.api.controllers.DefaultBalanceOperationsController;
 import me.pagar.api.controllers.DefaultChargesController;
@@ -29,6 +30,7 @@ import me.pagar.api.controllers.DefaultPayablesController;
 import me.pagar.api.controllers.DefaultPlansController;
 import me.pagar.api.controllers.DefaultRecipientsController;
 import me.pagar.api.controllers.DefaultSubscriptionsController;
+import me.pagar.api.controllers.DefaultHealthCheckController;
 import me.pagar.api.controllers.DefaultTokensController;
 import me.pagar.api.controllers.DefaultTransactionsController;
 import me.pagar.api.controllers.DefaultTransfersController;
@@ -67,6 +69,7 @@ public final class PagarmeApiSDKClient implements PagarmeApiSDKClientInterface {
     private TransfersController transfers;
     private PayablesController payables;
     private BalanceOperationsController balanceOperations;
+    private HealthCheckController healthCheck;
 
     private static final CompatibilityFactory compatibilityFactory = new CompatibilityFactoryImpl();
 
@@ -146,6 +149,7 @@ public final class PagarmeApiSDKClient implements PagarmeApiSDKClientInterface {
         transfers = new DefaultTransfersController(globalConfig);
         payables = new DefaultPayablesController(globalConfig);
         balanceOperations = new DefaultBalanceOperationsController(globalConfig);
+        healthCheck = new DefaultHealthCheckController(globalConfig);
     }
 
     /**
@@ -252,6 +256,14 @@ public final class PagarmeApiSDKClient implements PagarmeApiSDKClientInterface {
     }
 
     /**
+     * Get the instance of HealthCheckController.
+     * @return healthCheck
+     */
+    public HealthCheckController getHealthCheckController() {
+        return healthCheck;
+    }
+
+    /**
      * Current API environment.
      * @return environment
      */
@@ -346,6 +358,9 @@ public final class PagarmeApiSDKClient implements PagarmeApiSDKClientInterface {
      * @return base URL
      */
     private static String environmentMapper(Environment environment, Server server) {
+        if (environment.equals(Environment.MOCK)) {
+            return "http://localhost:8080";
+        }
         if (environment.equals(Environment.PRODUCTION)) {
             if (server.equals(Server.ENUM_DEFAULT)) {
                 return "https://api.pagar.me/core/v5";
@@ -387,7 +402,7 @@ public final class PagarmeApiSDKClient implements PagarmeApiSDKClientInterface {
      */
     public static class Builder {
 
-        private Environment environment = Environment.PRODUCTION;
+        private Environment environment = Environment.MOCK;
         private String serviceRefererName = "";
         private HttpClient httpClient;
         private BasicAuthModel basicAuthModel = new BasicAuthModel.Builder("", "").build();
